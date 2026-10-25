@@ -63,3 +63,9 @@ python -u train.py
 Keep edits on your laptop when using this workflow. Generated checkpoints,
 results, and logs are ignored by Git. The PowerShell SCP workflow above remains
 an alternative and uses the separate `/workspace/ML_training` directory.
+
+## LoRA training
+
+See [LORA.md](LORA.md) for Qwen2.5-0.5B-Instruct LoRA training. On this pod,
+clone code under `/root` because `/workspace` rejects Git permission operations;
+keep the existing `outputs` symlink pointing to `/workspace/training-outputs`.
