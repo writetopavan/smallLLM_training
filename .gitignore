@@ -1,0 +1,5 @@
+outputs/
+pod-results/
+__pycache__/
+.venv/
+*.log
