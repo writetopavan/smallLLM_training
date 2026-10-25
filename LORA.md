@@ -66,3 +66,35 @@ Do not push outputs, checkpoints, caches or tokens to GitHub.
 - https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct
 - https://huggingface.co/docs/peft/guides/peft_model_config
 - https://huggingface.co/docs/transformers/v4.56.2/main_classes/trainer
+
+## Post-training inference evaluation
+
+```bash
+cd /root/smallLLM_training
+git pull --ff-only
+source /root/lora-env/bin/activate
+python -u evaluate_lora.py
+```
+
+No training occurs. Loads the saved adapter and its recorded base model.
+Scores the actual 20 held-out rows from the saved dataset.json (not a regenerated
+split) plus 12 hand-labeled challenge clauses. Another 3 ambiguous/missing-deadline
+clauses are qualitative, unscored probes: the training schema cannot represent
+all of them faithfully. This is a tiny diagnostic suite, not a production benchmark.
+
+Reports separate heldout/challenge fractions for strict JSON, schema validity,
+payment-days accuracy, late-fee accuracy, both-fields accuracy, and strict exact
+match. Field accuracy accepts a single Markdown JSON fence; strict exact match
+requires a bare JSON object with exactly the expected keys and correct types.
+Absent or explicitly waived late fees use null; an explicitly stated 0% uses 0.
+Percentages are copied as stated, not converted to fractions or annualized.
+
+Results: outputs/lora-evaluation/evaluation.json and predictions.csv. These use
+your existing outputs symlink. Re-running evaluation replaces these two reports.
+No model weights or training checkpoints are modified.
+
+Optional custom inference, appended as an unscored probe:
+
+```bash
+python -u evaluate_lora.py --clause 'Payment is due in 25 days. Late fees are 0.75% per month.'
+```
